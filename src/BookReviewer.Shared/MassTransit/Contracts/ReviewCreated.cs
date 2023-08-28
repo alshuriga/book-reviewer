@@ -6,5 +6,5 @@ public record ReviewCreated
     public Guid BookId { get; init; }
     public Guid UserId { get; init; }
     public short Rating { get; init; }
-    public string Text { get; init; }
+    public string Text { get; init; }  = null!;
 }

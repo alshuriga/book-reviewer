@@ -26,7 +26,7 @@ public static class Extensions
                     conf.Interval(5, TimeSpan.FromSeconds(3));
                 });
 
-                cfg.Host(settings.Host);
+                cfg.Host(settings!.Host);
                 cfg.ConfigureEndpoints(context);
             });
 

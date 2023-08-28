@@ -16,7 +16,7 @@ public static class Extensions
             identity.User.RequireUniqueEmail = true;
         }, 
         mongo => {
-            mongo.ConnectionString = $"{mongoSettings.ConnectionString}/{mongoSettings.DatabaseName}";
+            mongo.ConnectionString = $"{mongoSettings!.ConnectionString}/{mongoSettings.DatabaseName}";
         });
         return services;
     }

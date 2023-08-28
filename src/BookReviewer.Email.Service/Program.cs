@@ -24,13 +24,13 @@ builder.Services.AddMassTransitWithRabbitMQ(builder.Configuration);
 
 builder.Services.AddSingleton<IEmailSubscribersRepository, MongoEmailSubscribersRepository>(services => {
     var mongoDbSettings = builder.Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
-    var database = new MongoClient(mongoDbSettings.ConnectionString).GetDatabase(mongoDbSettings.DatabaseName);
+    var database = new MongoClient(mongoDbSettings!.ConnectionString).GetDatabase(mongoDbSettings.DatabaseName);
     return new MongoEmailSubscribersRepository(mongoDatabase: database);
 });
 
 builder.Services.AddTransient<IEmailSendingService, EmailSendingService>(services => {
     var emailConfig = builder.Configuration.GetSection(nameof(EmailConfiguration)).Get<EmailConfiguration>();
-    return new EmailSendingService(emailConfig);
+    return new EmailSendingService(emailConfig!);
 });
 
 var app = builder.Build();

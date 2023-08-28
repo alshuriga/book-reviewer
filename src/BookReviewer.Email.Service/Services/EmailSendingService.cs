@@ -23,15 +23,14 @@ public class EmailSendingService : IEmailSendingService
 
         message.Body = new TextPart("plain") { Text = content };
 
-        using (var client = new SmtpClient())
-        {
-            client.Connect(emailConfig.Host, emailConfig.Port, false);
+        using var client = new SmtpClient();
+        
+        await client.ConnectAsync(emailConfig.Host, emailConfig.Port, false);
 
-            client.Authenticate(emailConfig.Email, emailConfig.Password);
+        await client.AuthenticateAsync(emailConfig.Email, emailConfig.Password);
 
-            var result = client.Send(message);
+        var result = await client.SendAsync(message);
 
-            client.Disconnect(true);
-        }
+        await client.DisconnectAsync(true);
     }
 }
