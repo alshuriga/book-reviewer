@@ -1,0 +1,103 @@
+{
+    "Routes": [
+        {
+            "DownstreamPathTemplate": "/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                    {
+                        "Host": "books-service",
+                        "Port": 80
+                    }
+                ],
+            "UpstreamPathTemplate": "/api/b/{everything}",
+            "UpstreamHttpMethod": [],
+            "SwaggerKey": "books-service"
+        },
+        {
+            "DownstreamPathTemplate": "/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                    {
+                        "Host": "reviews-service",
+                        "Port": 80
+                    }
+                ],
+            "UpstreamPathTemplate": "/api/r/{everything}",
+            "UpstreamHttpMethod": [],
+            "SwaggerKey": "reviews-service"
+        },
+        {
+            "DownstreamPathTemplate": "/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                    {
+                        "Host": "identity-provider",
+                        "Port": 80
+                    }
+                ],
+            "UpstreamPathTemplate": "/api/auth/{everything}",
+            "UpstreamHttpMethod": [],
+            "SwaggerKey":"identity-provider"
+        },
+        {
+            "DownstreamPathTemplate": "/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                    {
+                        "Host": "email-service",
+                        "Port": 80
+                    }
+                ],
+            "UpstreamPathTemplate": "/api/sub/{everything}",
+            "UpstreamHttpMethod": [],
+            "SwaggerKey": "email-service"
+        }
+    ],
+    
+    "GlobalConfiguration": {
+        "BaseUrl": "http://localhost:3000"
+    },
+    
+    "SwaggerEndPoints": [
+        {
+            "Key": "books-service",
+            "Config": [
+                {
+                    "Name": "books-service",
+                    "Version": "v1",
+                    "Url":"http://books-service:80/swagger/v1/swagger.json"
+                }
+            ]
+        },
+        {
+            "Key": "reviews-service",
+            "Config": [
+                {
+                    "Name": "reviews-service",
+                    "Version": "v1",
+                    "Url": "http://reviews-service:80/swagger/v1/swagger.json"
+                }
+            ]
+        },
+        {
+            "Key": "identity-provider",
+            "Config": [
+                {
+                    "Name": "identity-provider",
+                    "Version": "v1",
+                    "Url": "http://identity-provider:80/swagger/v1/swagger.json"
+                }
+            ]
+        },
+        {
+            "Key": "email-service",
+            "Config": [
+                {
+                    "Name": "email-service",
+                    "Version": "v1",
+                    "Url":"http://email-service:80/swagger/v1/swagger.json"
+                }
+            ]
+        }
+    ]
+}

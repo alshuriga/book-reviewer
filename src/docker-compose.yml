@@ -1,0 +1,75 @@
+services:
+  api-gateway:
+    build:
+      dockerfile: ./BookReviewer.ApiGateway/Dockerfile
+    ports:
+      - 3000:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+  books-service:
+    build:
+      dockerfile: ./BookReviewer.Books.Service/Dockerfile
+    depends_on:
+      - mongodb
+      - rabbit
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - JwtSettings__JwtSecret=${JwtSettingsJwtSecret}
+      - JwtSettings__LifetimeSeconds=${JwtSettingsLifetimeSeconds}
+      - JwtSettings__JwtIssuer=${JwtSettingsJwtIssuer}
+  reviews-service:
+    build:
+      dockerfile: ./BookReviewer.Reviews.Service/Dockerfile
+    depends_on:
+      - mongodb
+      - rabbit
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - JwtSettings__JwtSecret=${JwtSettingsJwtSecret}
+      - JwtSettings__LifetimeSeconds=${JwtSettingsLifetimeSeconds}
+      - JwtSettings__JwtIssuer=${JwtSettingsJwtIssuer}
+  email-service:
+    build:
+      dockerfile: ./BookReviewer.Email.Service/Dockerfile
+    ports: 
+      - 4001:80
+    depends_on:
+      - mongodb
+      - rabbit
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - EmailConfiguration__Host=${EmailConfigurationHost}
+      - EmailConfiguration__Port=${EmailConfigurationPort}
+      - EmailConfiguration__Email=${EmailConfigurationEmail}
+      - EmailConfiguration__Password=${EmailConfigurationPassword}
+      - JwtSettings__JwtSecret=${JwtSettingsJwtSecret}
+      - JwtSettings__LifetimeSeconds=${JwtSettingsLifetimeSeconds}
+      - JwtSettings__JwtIssuer=${JwtSettingsJwtIssuer}
+  identity-provider:
+    build:
+      dockerfile: ./BookReviewer.IdentityProvider/Dockerfile
+    depends_on:
+      - mongodb
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - JwtSettings__JwtSecret=${JwtSettingsJwtSecret}
+      - JwtSettings__LifetimeSeconds=${JwtSettingsLifetimeSeconds}
+      - JwtSettings__JwtIssuer=${JwtSettingsJwtIssuer}
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodbdata:/data/db
+  rabbit:
+    image: masstransit/rabbitmq
+    ports:
+      - 15672:15672
+     # - 5672:5672
+    volumes:
+      - rabbitmqdata:/var/lib/rabbitmq
+
+volumes:
+  mongodbdata:
+  rabbitmqdata:
+    
