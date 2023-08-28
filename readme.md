@@ -12,7 +12,7 @@ Book Reviewer is a WebAPI that represents a book database,  where users have the
 
 ### Application Structure
 
-Application is build with Microservices Architecture approach. The diagram below shows how different modules of the application are connect with each other:
+Application is built with Microservices Architecture approach. The diagram below shows how different modules of the application are connected with each other:
 
 ![bookreviewerDiagram](https://github.com/alshuriga/book-reviewer/assets/8162224/f81ad061-035d-4727-b2fb-50d31f0a1f07)
 
