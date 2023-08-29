@@ -1,9 +1,9 @@
 # BookReviewer
 
-Book Reviewer is a WebAPI that represents a book database,  where users have the ability to leave their own reviews for books, and subscribe to specific books in order to recieve notification of new reviews appeared for those books.
+Book Reviewer is an API that where users have the ability to leave their own reviews for books, and subscribe to specific books in order to recieve notification of new reviews appeared for those books.
 
 ### Technologies Used
-- ASP.NetCore;
+- ASP.Net Core;
 - MongoDB databases for storing books, reviews, subscriptions and user data;
 - RabbitMQ for communication between microservices;
 - Ocelot as API Gateway;
@@ -12,9 +12,10 @@ Book Reviewer is a WebAPI that represents a book database,  where users have the
 
 ### Application Structure
 
-Application is built with Microservices Architecture approach. The diagram below shows how different modules of the application are connected with each other:
+Application is built using microservices architecture approach. The diagram below shows how different modules of the application are connected with each other:
 
-![bookreviewerDiagram](https://github.com/alshuriga/book-reviewer/assets/8162224/f81ad061-035d-4727-b2fb-50d31f0a1f07)
+![bookreviewerDiagram](https://github.com/alshuriga/book-reviewer/assets/8162224/64650aca-c554-47d3-a80e-aeed0f98f59e)
+
 
 ### How to launch
 
