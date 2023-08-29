@@ -12,14 +12,14 @@ public record ReviewDTO(
 public record CreateBookDTO(
     [StringLength(50, MinimumLength = 1)] string Title,
     [StringLength(50, MinimumLength = 1)] string Author,
-    [StringLength(50, MinimumLength = 1)] string Description
+    [StringLength(500, MinimumLength = 1)] string Description
     );
 
 public record UpdateBookDTO(
     Guid Id,
     [StringLength(50, MinimumLength = 1)] string Title,
     [StringLength(50, MinimumLength = 1)] string Author,
-    [StringLength(50, MinimumLength = 1)] string Description
+    [StringLength(500, MinimumLength = 1)] string Description
 );
 
 
