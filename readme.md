@@ -1,6 +1,6 @@
 # BookReviewer
 
-BookReviewer is an API where users have the ability to leave their own reviews for books and subscribe to specific books to receive notifications of new reviews on their emails.
+BookReviewer is an API built with microservices that provides users the ability to leave their own book reviews and subscribe to specific books to receive email notifications of new reviews.
 
 ### Technologies Used
 - ASP.Net Core;
