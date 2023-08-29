@@ -1,6 +1,6 @@
 using BookReviewer.Shared.Entities;
 
-namespace BookReviewer.Email.Service.Entites;
+namespace BookReviewer.Email.Service.Entities;
 
 public class ReviewSubscriptionData : Entity
 {

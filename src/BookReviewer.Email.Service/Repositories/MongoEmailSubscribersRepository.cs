@@ -1,4 +1,4 @@
-using BookReviewer.Email.Service.Entites;
+using BookReviewer.Email.Service.Entities;
 using MassTransit.Initializers;
 using MongoDB.Driver;
 

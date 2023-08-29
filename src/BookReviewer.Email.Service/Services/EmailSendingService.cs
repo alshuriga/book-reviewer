@@ -1,3 +1,5 @@
+using BookReviewer.Email.Service.Entities;
+using BookReviewer.Shared.Repositories;
 using MailKit.Net.Smtp;
 using MimeKit;
 
@@ -9,6 +11,7 @@ public class EmailSendingService : IEmailSendingService
     public EmailSendingService(EmailConfiguration emailConfig)
     {
         this.emailConfig = emailConfig;
+        
     }
     public async Task SendEmailAsync(IEnumerable<string> emails, string subject, string content)
     {

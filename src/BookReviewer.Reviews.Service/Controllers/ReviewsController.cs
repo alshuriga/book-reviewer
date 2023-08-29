@@ -5,6 +5,9 @@ using BookReviewer.Shared.MassTransit.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using BookReviewer.Reviews.Service;
+
+namespace BookReviewer.Reviews.Controllers;
 
 [ApiController]
 [Route("reviews")]
@@ -33,7 +36,7 @@ public class ReviewsController : ControllerBase
         var review = new Review
         {
             BookId = createReviewDTO.BookId,
-            UserId = Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value),
+            UserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!),
             Rating = createReviewDTO.Rating,
             Text = createReviewDTO.Text
         };
@@ -42,6 +45,7 @@ public class ReviewsController : ControllerBase
 
         await publishEndpoint.Publish(new ReviewCreated
         {
+            ReviewId = review.Id,
             BookId = review.BookId,
             UserId = review.UserId,
             Rating = review.Rating,
@@ -55,17 +59,23 @@ public class ReviewsController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateReview(UpdateReviewDTO updateReviewDTO)
     {
-        var review = new Review
-        {
-            BookId = updateReviewDTO.BookId,
-            Rating = updateReviewDTO.Rating,
-            Text = updateReviewDTO.Text
-        };
+        var review = await repository.GetByIdAsync(updateReviewDTO.ReviewId);
+
+        if(review == null)
+            return NotFound();
+
+        if(review.UserId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            return Unauthorized();
+
+        review.Rating = updateReviewDTO.Rating;
+        review.Text = updateReviewDTO.Text;
 
         await repository.UpdateAsync(review);
 
         await publishEndpoint.Publish(new ReviewUpdated
         {
+            ReviewId = review.Id,
+            UserId = review.UserId,
             BookId = review.BookId,
             Rating = review.Rating,
             Text = review.Text

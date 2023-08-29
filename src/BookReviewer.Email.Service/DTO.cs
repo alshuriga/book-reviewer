@@ -1,1 +1,3 @@
-public record SubscribeUserToBookDTO(Guid bookId);
+namespace BookReviewer.Email;
+
+public record SubscribeUserToBookDTO(Guid BookId);

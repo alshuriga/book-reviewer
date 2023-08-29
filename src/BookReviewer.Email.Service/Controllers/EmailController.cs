@@ -1,5 +1,7 @@
 using System.Security.Claims;
+using BookReviewer.Email.Service.Entities;
 using BookReviewer.Email.Service.Repositories;
+using BookReviewer.Shared.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,24 +12,23 @@ namespace BookReviewer.Email.Service.Controllers;
 public class EmailController : ControllerBase
 {
     private readonly IEmailSubscribersRepository emailSubscribersRepository;
-    private readonly IEmailSendingService emailSendingService;
 
-    public EmailController(IEmailSubscribersRepository emailSubscribersRepository, IEmailSendingService emailSendingService)
+    public EmailController(IEmailSubscribersRepository emailSubscribersRepository)
     {
         this.emailSubscribersRepository = emailSubscribersRepository;
-        this.emailSendingService = emailSendingService;
+
     }
 
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> SubscribeUserToBookReviews(SubscribeUserToBookDTO subscribeUserToBookDTO)
     {
-        var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        var email = User.FindFirstValue(ClaimTypes.Email);
         
         if(email == null)
             return BadRequest("User doesn't have an email linked to the account");
             
-        await emailSubscribersRepository.AddEmailToSubscribersAsync(email, subscribeUserToBookDTO.bookId);
+        await emailSubscribersRepository.AddEmailToSubscribersAsync(email, subscribeUserToBookDTO.BookId);
         return NoContent();
     }
 

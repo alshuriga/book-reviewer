@@ -2,5 +2,5 @@ namespace BookReviewer.Shared.MassTransit.Contracts;
 
 public record ReviewDeleted
 {
-    public Guid ReviewId { get; init; }
+    public required Guid ReviewId { get; init; }
 }

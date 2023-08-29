@@ -1,6 +1,8 @@
 using BookReviewer.Books.Service.DTO;
 using BookReviewer.Shared.Entities;
+using BookReviewer.Shared.MassTransit.Contracts;
 using BookReviewer.Shared.Repositories;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +15,13 @@ public class BooksController : ControllerBase
 {
     private readonly IRepository<Book> booksRepository;
     private readonly IRepository<Review> reviewsRepository;
-    public BooksController(IRepository<Book> booksRepository, IRepository<Review> reviewsRepository) 
+
+    private readonly IPublishEndpoint publishEndpoint;
+    public BooksController(IRepository<Book> booksRepository, IRepository<Review> reviewsRepository, IPublishEndpoint publishEndpoint) 
     {
         this.booksRepository = booksRepository;
         this.reviewsRepository = reviewsRepository;
+        this.publishEndpoint = publishEndpoint;
     }
 
     [HttpGet]
@@ -44,6 +49,14 @@ public class BooksController : ControllerBase
         };
 
         await booksRepository.CreateAsync(book);
+
+        await publishEndpoint.Publish(new BookCreated
+        {
+            BookId = book.Id,
+            Title = book.Title,
+            Author = book.Author
+        });
+        
         return NoContent();
     }
 
@@ -59,6 +72,14 @@ public class BooksController : ControllerBase
         };
 
         await booksRepository.UpdateAsync(book);
+
+        await publishEndpoint.Publish(new BookUpdated
+        {
+            BookId = book.Id,
+            Title = book.Title,
+            Author = book.Author
+        });
+
         return NoContent();
     }
 
@@ -67,6 +88,9 @@ public class BooksController : ControllerBase
     public async Task<IActionResult> DeleteBook(Guid id)
     {
         await booksRepository.DeleteAsync(id);
+
+        await publishEndpoint.Publish(new BookDeleted() { BookId = id });
+
         return NoContent();
     }
 }
