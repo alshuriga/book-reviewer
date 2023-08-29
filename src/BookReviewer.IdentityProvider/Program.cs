@@ -2,6 +2,7 @@ using BookReviewer.InentityProvider;
 using BookReviewer.InentityProvider.IdentityModels;
 using BookReviewer.InentityProvider.Services;
 using BookReviewer.Shared.Auth;
+using BookReviewer.Shared.FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddFluentValidation();
 
 builder.Services.AddMongoIdentity(builder.Configuration);
 

@@ -4,6 +4,7 @@ using BookReviewer.Email.Service.Entities;
 using BookReviewer.Email.Service.Repositories;
 using BookReviewer.Shared.Auth;
 using BookReviewer.Shared.Entities;
+using BookReviewer.Shared.FluentValidation;
 using BookReviewer.Shared.MassTransit;
 using BookReviewer.Shared.MongoDb;
 using BookReviewer.Shared.Repositories;
@@ -27,6 +28,7 @@ builder.Services.AddMassTransitWithRabbitMQ(builder.Configuration);
 
 builder.Services.AddSingleton<IEmailSubscribersRepository, MongoEmailSubscribersRepository>();
 builder.Services.AddSingleton<IRepository<EmailBookInfo>, MongoDbRepository<EmailBookInfo>>();
+builder.Services.AddFluentValidation();
 
 builder.Services.AddMongoDbDatabase(builder.Configuration);
 

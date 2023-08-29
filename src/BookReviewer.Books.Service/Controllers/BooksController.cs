@@ -2,6 +2,7 @@ using BookReviewer.Books.Service.DTO;
 using BookReviewer.Shared.Entities;
 using BookReviewer.Shared.MassTransit.Contracts;
 using BookReviewer.Shared.Repositories;
+using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

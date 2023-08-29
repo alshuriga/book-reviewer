@@ -1,3 +1,4 @@
+using Amazon.Auth.AccessControlPolicy;
 using BookReviewer.Email.Service.Entities;
 using BookReviewer.Email.Service.Repositories;
 using BookReviewer.Shared.MassTransit.Contracts;
@@ -22,7 +23,7 @@ public class ReviewCreatedConsumer : IConsumer<ReviewCreated>
     {
         var bookInfo = await emailBookInfoRepository.GetByIdAsync(context.Message.BookId) ?? throw new ArgumentException("Book not found");
         var emails = await emailSubscribersRepository.GetEmailsForBookAsync(context.Message.BookId);
-        await emailSendingService.SendEmailAsync(emails, $"New review for \"{bookInfo.Title}\" by {bookInfo.Author}",  $"a user just posted a review:\nRating: {context.Message.Rating}\n{context.Message.Text}");     
+        await emailSendingService.SendEmailAsync(emails, $"New review for \"{bookInfo.Title}\" by {bookInfo.Author}",  $"Some user just posted a review:\nRating: {context.Message.Rating}\n{context.Message.Text}");     
     }
 }
 

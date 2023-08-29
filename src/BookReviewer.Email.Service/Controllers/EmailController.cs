@@ -1,7 +1,6 @@
 using System.Security.Claims;
-using BookReviewer.Email.Service.Entities;
+using BookReviewer.Email.DTO;
 using BookReviewer.Email.Service.Repositories;
-using BookReviewer.Shared.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +15,6 @@ public class EmailController : ControllerBase
     public EmailController(IEmailSubscribersRepository emailSubscribersRepository)
     {
         this.emailSubscribersRepository = emailSubscribersRepository;
-
     }
 
     [Authorize]

@@ -1,3 +1,3 @@
-namespace BookReviewer.Email;
+namespace BookReviewer.Email.DTO;
 
 public record SubscribeUserToBookDTO(Guid BookId);

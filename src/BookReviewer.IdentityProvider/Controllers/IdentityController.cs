@@ -1,4 +1,4 @@
-using BookReviewer.InentityProvider.DTOs;
+using BookReviewer.InentityProvider.DTO;
 using BookReviewer.InentityProvider.IdentityModels;
 using BookReviewer.InentityProvider.Services;
 using Microsoft.AspNetCore.Identity;
@@ -38,16 +38,14 @@ public class IdentityController : ControllerBase
     public async Task<IActionResult> SignIn(SignInUserDTO signInUserDTO)
     {
         var user = userManager.Users.FirstOrDefault(u => u.Email == signInUserDTO.Email);
-        if (user != null)
+        if (user == null) return BadRequest("User not found.");
+        var res = await userManager.CheckPasswordAsync(user, signInUserDTO.Password);
+        if (res)
         {
-            var res = await userManager.CheckPasswordAsync(user, signInUserDTO.Password);
-            if (res)
-            {
-                var roles = (await userManager.GetRolesAsync(user)).ToArray();
-                return Ok(new { token = jwtProvider.GenerateJWT(user) });
-            }
-
+            var roles = (await userManager.GetRolesAsync(user)).ToArray();
+            return Ok(new { token = jwtProvider.GenerateJWT(user) });
         }
         return Unauthorized();
+        
     }
 }

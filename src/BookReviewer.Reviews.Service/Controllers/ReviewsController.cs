@@ -5,7 +5,7 @@ using BookReviewer.Shared.MassTransit.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using BookReviewer.Reviews.Service;
+using BookReviewer.Reviews.Service.DTO;
 
 namespace BookReviewer.Reviews.Controllers;
 

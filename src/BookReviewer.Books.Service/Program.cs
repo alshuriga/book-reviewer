@@ -1,5 +1,6 @@
 using BookReviewer.Shared.Auth;
 using BookReviewer.Shared.Entities;
+using BookReviewer.Shared.FluentValidation;
 using BookReviewer.Shared.MassTransit;
 using BookReviewer.Shared.MongoDb;
 using BookReviewer.Shared.Repositories;
@@ -16,7 +17,7 @@ builder.Services.AddMongoDbDatabase(builder.Configuration);
 builder.Services.AddSingleton<IRepository<Book>, MongoDbRepository<Book>>();
 builder.Services.AddSingleton<IRepository<Review>, MongoDbRepository<Review>>();
 builder.Services.AddMassTransitWithRabbitMQ(builder.Configuration);
-
+builder.Services.AddFluentValidation();
 builder.Services.AddJwtAuthorization(builder.Configuration);
 
 var app = builder.Build();
