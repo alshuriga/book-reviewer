@@ -2,8 +2,8 @@ namespace BookReviewer.Shared.MongoDb;
 
 public class MongoDbSettings 
 {
-    public string Host { get; init; } = null!;
-    public string DatabaseName {get; init;} = null!;
-
+    public required string Host { get; init; }
+    public required string DatabaseName {get; init;}
+    
     public string ConnectionString => $"mongodb://{Host}";
 }

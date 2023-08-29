@@ -30,7 +30,7 @@ public class IdentityController : ControllerBase
     [HttpGet]
     public IActionResult GetAllUsers()
     {
-        var users = userManager.Users.Select(u => new UserDTO(u.Id, u.Email, u.Roles));
+        var users = userManager.Users.Select(u => new UserDTO(u.Id, u.Email!, u.Roles));
         return Ok(users);
     }
 

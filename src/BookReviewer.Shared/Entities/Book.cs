@@ -2,9 +2,9 @@ namespace BookReviewer.Shared.Entities;
 
 public class Book : Entity
 {
-    public string Title { get; set; } = null!;
-    public string Author { get; set; } = null!;
-    public string Description {get; set;} = null!;
-    public IList<Review> Reviews { get; set; } = null!;
+    public required string Title { get; set; }
+    public required string Author { get; set; }
+    public required string Description {get; set;}
+    public ICollection<Review> Reviews { get; set; } = new List<Review>();
 }
 

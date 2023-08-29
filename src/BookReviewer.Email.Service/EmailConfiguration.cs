@@ -2,10 +2,10 @@ namespace BookReviewer.Email.Service;
 
 public class EmailConfiguration
 {
-    public string Host { get; init; }  = null!;
-    public int Port { get; init; }
-    public string Email { get; init; } = null!;
-    public string Password { get; init; } = null!;
-    public string FromName { get; init; } = null!;
-    public string FromEmail { get; init; } = null!;
+    public required string Host { get; init; }
+    public required int Port { get; init; }
+    public required string Email { get; init; }
+    public required string Password { get; init; }
+    public required string FromName { get; init; }
+    public required string FromEmail { get; init; }
 }
