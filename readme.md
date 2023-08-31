@@ -14,7 +14,7 @@ BookReviewer is an API built with microservices that provides users the ability 
 
 Application is built using microservices architecture approach. The diagram below shows how different modules of the application are connected with each other:
 
-![bookreviewerDiagram](https://github.com/alshuriga/book-reviewer/assets/8162224/64650aca-c554-47d3-a80e-aeed0f98f59e)
+![bookreviewerDiagram](https://github.com/alshuriga/book-reviewer/assets/8162224/af0e6e8f-9d48-4355-ab19-538021f489fa)
 
 
 ### How to launch
