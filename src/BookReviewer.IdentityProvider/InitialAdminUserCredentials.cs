@@ -1,4 +1,4 @@
-namespace BookReviewer.InentityProvider;
+namespace BookReviewer.IdentityProvider;
 
 public class InitialAdminUserCredentials
 {

@@ -1,13 +1,14 @@
-using BookReviewer.InentityProvider.DTO;
-using BookReviewer.InentityProvider.IdentityModels;
-using BookReviewer.InentityProvider.Services;
+using BookReviewer.IdentityProvider.DTO;
+using BookReviewer.IdentityProvider.IdentityModels;
+using BookReviewer.IdentityProvider.Services;
 using MassTransit.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver.Linq;
+using Swashbuckle.AspNetCore.Annotations;
 
-namespace BookReviewer.InentityProvider.Controller;
+namespace BookReviewer.IdentityProvider.Controller;
 
 [Route("users")]
 [ApiController]
@@ -22,6 +23,9 @@ public class IdentityController : ControllerBase
         this.jwtProvider = jwtProvider;
     }
 
+
+    [SwaggerOperation("Create a new user")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserDTO userDTO)
     {
@@ -30,6 +34,9 @@ public class IdentityController : ControllerBase
         return NoContent();
     }
 
+
+    [SwaggerOperation("Get a list of all users")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [Authorize(Roles = "Admin")]
     [HttpGet]
     public IActionResult GetAllUsers()
@@ -38,6 +45,8 @@ public class IdentityController : ControllerBase
         return Ok(users);
     }
 
+    [SwaggerOperation("Assign admin permissions to a user")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [HttpPost("admin")]
     public async Task<IActionResult> AssignAdmin(UserRoleManagementDTO userRoleManagementDTO)
     {
@@ -54,7 +63,8 @@ public class IdentityController : ControllerBase
         return NoContent();
     }
 
-
+    [SwaggerOperation("Suspend admin permissions from a user")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [HttpDelete("admin")]
     public async Task<IActionResult> SuspendAdmin(UserRoleManagementDTO userRoleManagementDTO)
     {
@@ -77,16 +87,18 @@ public class IdentityController : ControllerBase
         return NoContent();
     }
 
+    [SwaggerOperation("Generate JWT for authentication/authorization")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpPost("signin")]
     public async Task<IActionResult> SignIn(SignInUserDTO signInUserDTO)
     {
         var user = userManager.Users.FirstOrDefault(u => u.Email == signInUserDTO.Email);
-        if (user == null) return BadRequest("User not found.");
+        if (user == null) return NotFound("User not found.");
         var res = await userManager.CheckPasswordAsync(user, signInUserDTO.Password);
         if (res)
         {
             var roles = (await userManager.GetRolesAsync(user)).ToArray();
-            return Ok(new { token = jwtProvider.GenerateJWT(user) });
+            return Ok(new { token = await jwtProvider.GenerateJWT(user) });
         }
         return Unauthorized();
         

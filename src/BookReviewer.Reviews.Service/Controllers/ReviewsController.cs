@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using BookReviewer.Reviews.Service.DTO;
+using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BookReviewer.Reviews.Controllers;
 
@@ -22,6 +24,8 @@ public class ReviewsController : ControllerBase
         this.publishEndpoint = publishEndpoint;
     }
 
+    [SwaggerOperation("Get a list of reviews of specified book")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet]
     public async Task<IActionResult> GetAllReviewsByBookId([FromQuery] Guid bookId)
     {
@@ -29,6 +33,8 @@ public class ReviewsController : ControllerBase
         return Ok(books);
     }
 
+    [SwaggerOperation("Create a review")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateReview(CreateReviewDTO createReviewDTO)
@@ -55,6 +61,8 @@ public class ReviewsController : ControllerBase
         return NoContent();
     }
 
+    [SwaggerOperation("Update a review")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [Authorize]
     [HttpPut]
     public async Task<IActionResult> UpdateReview(UpdateReviewDTO updateReviewDTO)
@@ -65,7 +73,7 @@ public class ReviewsController : ControllerBase
             return NotFound();
 
         if(review.UserId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier))
-            return Unauthorized();
+            return Forbid();
 
         review.Rating = updateReviewDTO.Rating;
         review.Text = updateReviewDTO.Text;
@@ -84,13 +92,19 @@ public class ReviewsController : ControllerBase
         return NoContent();
     }
 
-
+    [SwaggerOperation("Delete a review")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteReview(Guid id)
-    {
-        await repository.DeleteAsync(id);
+    {   
+        var review = await repository.GetByIdAsync(id);
 
+        if(review == null) return NotFound();
+
+        if(review.UserId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier)) return Forbid();
+
+        await repository.DeleteAsync(id);
         await publishEndpoint.Publish(new ReviewDeleted { ReviewId = id });
         
         return NoContent();

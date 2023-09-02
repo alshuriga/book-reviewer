@@ -11,13 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c => c.EnableAnnotations());
+builder.Services.AddFluentValidation();
 
 builder.Services.AddMongoDbDatabase(builder.Configuration);
 builder.Services.AddSingleton<IRepository<Book>, MongoDbRepository<Book>>();
 builder.Services.AddSingleton<IRepository<Review>, MongoDbRepository<Review>>();
 builder.Services.AddMassTransitWithRabbitMQ(builder.Configuration);
-builder.Services.AddFluentValidation();
 builder.Services.AddJwtAuthorization(builder.Configuration);
 
 var app = builder.Build();

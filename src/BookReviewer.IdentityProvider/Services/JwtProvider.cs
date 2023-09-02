@@ -1,34 +1,43 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 
-using BookReviewer.InentityProvider.IdentityModels;
+using BookReviewer.IdentityProvider.IdentityModels;
 using BookReviewer.Shared.Auth;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BookReviewer.InentityProvider.Services;
+namespace BookReviewer.IdentityProvider.Services;
 
 public class JwtProvider
 {
     private readonly JwtSettings jwtSettings;
-    public JwtProvider(IOptions<JwtSettings> jwtSettings)
+
+    private readonly UserManager<ApplicationUser> userManager;
+    public JwtProvider(IOptions<JwtSettings> jwtSettings, UserManager<ApplicationUser> userManager)
     {
         this.jwtSettings = jwtSettings.Value;
+        this.userManager = userManager;
     }
 
-    public string GenerateJWT(ApplicationUser user)
+    public async Task<string> GenerateJWT(ApplicationUser user)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.JwtSecret));
 
         var claims = new List<Claim>() { 
                 new Claim(ClaimTypes.Name, user.UserName!),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email!)
+                new Claim(ClaimTypes.Email, user.Email!),
                 };
 
-        foreach(var role in user.Roles) claims.Add(new Claim(ClaimTypes.Role, role));
-
+        foreach(var role in await userManager.GetRolesAsync(user))
+        {
+            if(role != null)
+                claims.Add(new Claim(ClaimTypes.Role, role));
+        }
+                
         var descriptor = new JwtSecurityToken(
             claims: claims,
             signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256),

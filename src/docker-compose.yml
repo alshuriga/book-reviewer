@@ -55,7 +55,7 @@ services:
       - JwtSettings__JwtSecret=${JwtSettingsJwtSecret}
       - JwtSettings__LifetimeSeconds=${JwtSettingsLifetimeSeconds}
       - JwtSettings__JwtIssuer=${JwtSettingsJwtIssuer}
-      - InitialAdminUserCredentials__Username=${InitialAdminUserCredentialsUsername}
+      - InitialAdminUserCredentials__Username=${InitialAdminUserCredentialsEmail}
       - InitialAdminUserCredentials__Password=${InitialAdminUserCredentialsPassword}
   mongodb:
     image: mongo

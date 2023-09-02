@@ -1,6 +1,6 @@
 using AspNetCore.Identity.Mongo.Model;
 
-namespace BookReviewer.InentityProvider.IdentityModels;
+namespace BookReviewer.IdentityProvider.IdentityModels;
 
 public class ApplicationRole : MongoRole<Guid>
 {

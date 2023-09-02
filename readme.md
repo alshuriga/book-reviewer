@@ -33,6 +33,10 @@ EmailConfigurationPassword=
 JwtSettingsJwtSecret=
 JwtSettingsLifetimeSeconds=
 JwtSettingsJwtIssuer=
+
+#InitialAdminAccountCredentials (password min. length is 8, must have uppercase, lowercase, numeric and special character)
+InitialAdminUserCredentialsEmail=
+InitialAdminUserCredentialsPassword=
 ```
 
 -  Launch docker compose in *src* directory:

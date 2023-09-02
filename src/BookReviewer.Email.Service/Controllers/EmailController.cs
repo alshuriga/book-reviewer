@@ -3,6 +3,7 @@ using BookReviewer.Email.DTO;
 using BookReviewer.Email.Service.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace BookReviewer.Email.Service.Controllers;
 
@@ -17,6 +18,8 @@ public class EmailController : ControllerBase
         this.emailSubscribersRepository = emailSubscribersRepository;
     }
 
+    [SwaggerOperation("Subscribe a user to new reviews of specific book")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> SubscribeUserToBookReviews(SubscribeUserToBookDTO subscribeUserToBookDTO)

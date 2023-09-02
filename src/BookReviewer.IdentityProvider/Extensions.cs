@@ -2,12 +2,12 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Security.Claims;
 using AspNetCore.Identity.Mongo;
-using BookReviewer.InentityProvider.IdentityModels;
+using BookReviewer.IdentityProvider.IdentityModels;
 using BookReviewer.Shared.MongoDb;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Writers;
 
-namespace BookReviewer.InentityProvider;
+namespace BookReviewer.IdentityProvider;
 
 public static class Extensions
 {
@@ -30,11 +30,21 @@ public static class Extensions
     {
         var credentials = app.Configuration.GetSection(nameof(InitialAdminUserCredentials)).Get<InitialAdminUserCredentials>();
 
-        var usersService = app.Services.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var uManager = app.Services.CreateScope().ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-        var user = usersService.Users.FirstOrDefault(u => u.UserName == credentials!.Username);
+        var rManager = app.Services.CreateScope().ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+
+        await rManager.CreateAsync(new ApplicationRole() { Name = "Admin"} );
+
+        var user = uManager.Users.FirstOrDefault(u => u.UserName == credentials!.Username);
 
         if(user == null)
-            await usersService.CreateAsync(new ApplicationUser() { UserName = credentials!.Username}, credentials.Password);
+        {
+            var res = await uManager.CreateAsync(new ApplicationUser() { UserName = credentials!.Username, Email = credentials!.Username }, credentials.Password);
+            if(!res.Succeeded) 
+                throw new ApplicationException($"Error while creating an initial administrator account:\n{string.Join('\n', res.Errors)}");
+            
+            res = await uManager.AddToRoleAsync((await uManager.FindByNameAsync(credentials.Username))!, "Admin");
+        }
     }
 }

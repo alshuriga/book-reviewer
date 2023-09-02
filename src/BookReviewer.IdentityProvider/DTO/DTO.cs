@@ -1,4 +1,4 @@
-namespace BookReviewer.InentityProvider.DTO;
+namespace BookReviewer.IdentityProvider.DTO;
 
 public record CreateUserDTO(string Email, string Password);
 

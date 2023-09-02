@@ -6,12 +6,12 @@ using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace BookReviewer.Books.Service.Controllers;
 
+[Route("books")]
 [ApiController]
-[Route("books/")]
-
 public class BooksController : ControllerBase
 {
     private readonly IRepository<Book> booksRepository;
@@ -25,6 +25,8 @@ public class BooksController : ControllerBase
         this.publishEndpoint = publishEndpoint;
     }
 
+    [SwaggerOperation("Get a list of all books")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet]
     public async Task<IActionResult> GetAllBooks()
     {
@@ -39,7 +41,9 @@ public class BooksController : ControllerBase
         return Ok(books);
     }
 
-    [Authorize]
+    [SwaggerOperation("Create a book")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateBook(CreateBookDTO createBookDTO)
     {
@@ -61,7 +65,9 @@ public class BooksController : ControllerBase
         return NoContent();
     }
 
-    [Authorize]
+    [SwaggerOperation("Update a book")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<IActionResult> UpdateBook(UpdateBookDTO updateBookDTO)
     {
@@ -84,7 +90,9 @@ public class BooksController : ControllerBase
         return NoContent();
     }
 
-    [Authorize]
+    [SwaggerOperation("Delete a book")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBook(Guid id)
     {

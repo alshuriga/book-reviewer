@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace BookReviewer.InentityProvider.DTO;
+namespace BookReviewer.IdentityProvider.DTO;
 
 public class CreateUserDTOValidator : AbstractValidator<CreateUserDTO>
 {
