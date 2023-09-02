@@ -21,6 +21,8 @@ builder.Services.AddSingleton<JwtProvider>();
 
 var app = builder.Build();
 
+app.AddInitialAdminCredentials().Wait();
+
 if (app.Environment.IsDevelopment())
 { 
     app.UseHttpsRedirection();
