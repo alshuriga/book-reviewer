@@ -4,8 +4,10 @@ using BookReviewer.Shared.MassTransit.Contracts;
 using BookReviewer.Shared.Repositories;
 using FluentValidation;
 using MassTransit;
+using MassTransit.Scheduling;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace BookReviewer.Books.Service.Controllers;
@@ -30,14 +32,14 @@ public class BooksController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllBooks()
     {
-        var books = (await booksRepository.GetAsync()).Select(async b => new BookDTO(
-            b.Id,
-            b.Title,
-            b.Author,
-            b.Description,
-            (await reviewsRepository.GetAsync(r => r.BookId == b.Id))
-                .Select(r => new ReviewDTO(r.UserId, r.Rating, r.Text)).ToArray()));
-                
+        var books = new List<BookDTO>();
+        foreach(var book in await booksRepository.GetAsync())
+        {
+            var reviews = await reviewsRepository.GetAsync(r => r.BookId == book.Id);
+            var dto = new BookDTO(book.Id, book.Title, book.Author, book.Description, reviews.Select(r => new ReviewDTO(r.UserId, r.Rating, r.Text)).ToArray());
+            books.Add(dto);
+        }
+
         return Ok(books);
     }
 
