@@ -35,6 +35,7 @@ public class ReviewsController : ControllerBase
 
     [SwaggerOperation("Create a review")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateReview(CreateReviewDTO createReviewDTO)
@@ -63,6 +64,9 @@ public class ReviewsController : ControllerBase
 
     [SwaggerOperation("Update a review")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Authorize]
     [HttpPut]
     public async Task<IActionResult> UpdateReview(UpdateReviewDTO updateReviewDTO)
@@ -94,6 +98,9 @@ public class ReviewsController : ControllerBase
 
     [SwaggerOperation("Delete a review")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteReview(Guid id)

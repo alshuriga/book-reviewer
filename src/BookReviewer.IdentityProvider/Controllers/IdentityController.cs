@@ -26,6 +26,7 @@ public class IdentityController : ControllerBase
 
     [SwaggerOperation("Create a new user")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserDTO userDTO)
     {
@@ -47,6 +48,7 @@ public class IdentityController : ControllerBase
 
     [SwaggerOperation("Assign admin permissions to a user")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPost("admin")]
     public async Task<IActionResult> AssignAdmin(UserRoleManagementDTO userRoleManagementDTO)
     {
@@ -65,6 +67,8 @@ public class IdentityController : ControllerBase
 
     [SwaggerOperation("Suspend admin permissions from a user")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpDelete("admin")]
     public async Task<IActionResult> SuspendAdmin(UserRoleManagementDTO userRoleManagementDTO)
     {
@@ -89,6 +93,8 @@ public class IdentityController : ControllerBase
 
     [SwaggerOperation("Generate JWT for authentication/authorization")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpPost("signin")]
     public async Task<IActionResult> SignIn(SignInUserDTO signInUserDTO)
     {

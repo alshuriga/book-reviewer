@@ -45,6 +45,8 @@ public class BooksController : ControllerBase
 
     [SwaggerOperation("Create a book")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateBook(CreateBookDTO createBookDTO)
@@ -69,6 +71,8 @@ public class BooksController : ControllerBase
 
     [SwaggerOperation("Update a book")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<IActionResult> UpdateBook(UpdateBookDTO updateBookDTO)
@@ -94,6 +98,8 @@ public class BooksController : ControllerBase
 
     [SwaggerOperation("Delete a book")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBook(Guid id)

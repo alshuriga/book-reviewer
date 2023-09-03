@@ -20,6 +20,8 @@ public class EmailController : ControllerBase
 
     [SwaggerOperation("Subscribe a user to new reviews of specific book")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> SubscribeUserToBookReviews(SubscribeUserToBookDTO subscribeUserToBookDTO)
