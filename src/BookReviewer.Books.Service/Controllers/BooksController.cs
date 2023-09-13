@@ -43,6 +43,19 @@ public class BooksController : ControllerBase
         return Ok(books);
     }
 
+    [SwaggerOperation("Get a book by ID")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpGet("{bookId:guid}")]
+    public async Task<IActionResult> GetBookById(Guid bookId)
+    {
+        var book = await booksRepository.GetByIdAsync(bookId);
+        if(book == null) return NotFound();
+        book.Reviews = (await reviewsRepository.GetAsync(r => r.BookId == bookId)).ToList();
+
+        return Ok(book);
+    }
+
     [SwaggerOperation("Create a book")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
