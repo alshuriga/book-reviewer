@@ -1,11 +1,7 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Security.Claims;
 using AspNetCore.Identity.Mongo;
 using BookReviewer.IdentityProvider.IdentityModels;
 using BookReviewer.Shared.MongoDb;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.OpenApi.Writers;
 
 namespace BookReviewer.IdentityProvider;
 

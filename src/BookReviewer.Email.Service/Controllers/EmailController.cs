@@ -35,4 +35,39 @@ public class EmailController : ControllerBase
         return NoContent();
     }
 
+    [SwaggerOperation("Unsubscribe a user from new reviews of specific book")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [Authorize]
+    [HttpDelete]
+    public async Task<IActionResult> UnSubscribeUserFromBookReviews([FromQuery]Guid bookId)
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        
+        if(email == null)
+            return BadRequest("User doesn't have an email linked to the account");
+            
+        await emailSubscribersRepository.RemoveEmailFromSubscribersAsync(email, bookId);
+        return NoContent();
+    }
+
+    [SwaggerOperation("Get ID of books which current user is subscribed to")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> GetSubscriptionsOfUser()
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+
+        if(email == null)
+            return BadRequest("User doesn't have an email linked to the account");
+
+        var books = await emailSubscribersRepository.GetBooksByEmailAsync(email);
+
+        return Ok(books);
+    }
+
 }

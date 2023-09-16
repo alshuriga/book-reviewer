@@ -8,7 +8,7 @@ public class CreateReviewDTOValidator : AbstractValidator<CreateReviewDTO>
     {
         RuleFor(r => r.BookId).NotEmpty();
         RuleFor(r => r.Rating).InclusiveBetween((short)1, (short)10);
-        RuleFor(r => r.Text).Length(1, 500);
+        RuleFor(r => r.Text).NotEmpty().Length(1, 500);
     }
 }
 
@@ -19,6 +19,6 @@ public class UpdateReviewDTOValidator : AbstractValidator<UpdateReviewDTO>
         RuleFor(r => r.ReviewId).NotEmpty();
         RuleFor(r => r.BookId).NotEmpty();
         RuleFor(r => r.Rating).InclusiveBetween((short)1, (short)10);
-        RuleFor(r => r.Text).Length(1, 500);
+        RuleFor(r => r.Text).NotEmpty().Length(1, 500);
     }
 }

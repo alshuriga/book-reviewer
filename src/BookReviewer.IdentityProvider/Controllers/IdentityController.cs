@@ -1,7 +1,6 @@
 using BookReviewer.IdentityProvider.DTO;
 using BookReviewer.IdentityProvider.IdentityModels;
 using BookReviewer.IdentityProvider.Services;
-using MassTransit.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +14,13 @@ namespace BookReviewer.IdentityProvider.Controller;
 public class IdentityController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> userManager;
+    private readonly RoleManager<ApplicationRole> roleManager;
 
     private readonly JwtProvider jwtProvider;
-    public IdentityController(UserManager<ApplicationUser> userManager, JwtProvider jwtProvider)
+    public IdentityController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, JwtProvider jwtProvider)
     {
         this.userManager = userManager;
+        this.roleManager = roleManager;
         this.jwtProvider = jwtProvider;
     }
 
@@ -42,7 +43,14 @@ public class IdentityController : ControllerBase
     [HttpGet]
     public IActionResult GetAllUsers()
     {
-        var users = userManager.Users.Select(u => new UserDTO(u.Id, u.Email!, u.Roles));
+        var allRoles = roleManager.Roles.ToList();
+        var users = userManager.Users.ToList().Select(u => new UserDTO(
+            u.Id,
+            u.Email!,
+            u.Roles.Select(i => {
+                var id = Guid.Parse(i);
+                return new RoleDTO(id, allRoles.First(r => r.Id == id).NormalizedName!);
+        })));
         return Ok(users);
     }
 
@@ -69,7 +77,7 @@ public class IdentityController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpDelete("admin")]
+    [HttpPut("admin")]
     public async Task<IActionResult> SuspendAdmin(UserRoleManagementDTO userRoleManagementDTO)
     {
         var user = userManager.Users.FirstOrDefault(u => u.Id == userRoleManagementDTO.UserId);
@@ -77,10 +85,9 @@ public class IdentityController : ControllerBase
         if(user == null)
             return NotFound("User not found.");
 
-        if(!user.Roles.Contains("Admin"))
-            return BadRequest("User doesn't have admin rights.");
+        var usersInRole = await userManager.GetUsersInRoleAsync("Admin");
 
-        if(userManager.Users.Where(u => u.Roles.Contains("Admin")).Count() <= 1)
+        if(usersInRole.Count() <= 1)
             return BadRequest("There must be at least one user with admin rights.");
 
         var res = await userManager.RemoveFromRoleAsync(user, "Admin");
@@ -93,13 +100,12 @@ public class IdentityController : ControllerBase
 
     [SwaggerOperation("Generate JWT for authentication/authorization")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpPost("signin")]
     public async Task<IActionResult> SignIn(SignInUserDTO signInUserDTO)
     {
         var user = userManager.Users.FirstOrDefault(u => u.Email == signInUserDTO.Email);
-        if (user == null) return NotFound("User not found.");
+        if (user == null) return Unauthorized();
         var res = await userManager.CheckPasswordAsync(user, signInUserDTO.Password);
         if (res)
         {
